@@ -8,8 +8,6 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
 
-const API_KEY = process.env.REACT_APP_API_KEY;
-
 const particlesOptions = {
   particles: {
     number: {
@@ -22,9 +20,11 @@ const particlesOptions = {
   }
 }
 
+const API_KEY = process.env.REACT_APP_API_KEY;
+
 const app = new Clarifai.App({
   apiKey: API_KEY
- });
+});
 
 class App extends Component {
 
@@ -36,23 +36,42 @@ class App extends Component {
     }
   }
 
+  calculateFaceLocation = (data) => {
+    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById('inputimage');
+    const width = Number(image.width);
+    const height = Number(image.height);
+    return {
+      // clarifaiFace = the image
+      // left_col = the % of the width
+      // width = total with of img
+      // if we multiply this we get the point where the left col should be 
+      leftCol: clarifaiFace.left_col * width,
+  
+      //repeat for others
+      topRow: clarifaiFace.top_row * height,
+      rightCol: width - (clarifaiFace.right_col * width),
+      bottomRow: height - (clarifaiFace.bottom_row * height)
+    }
+  }
+  
+  displayFaceBox = (box) => {
+    this.setState({box: box});
+  }
+
   onInputChange = (event) => {
-    this.setState({input: event.target.value});
+    this.setState({ input: event.target.value });
     //event.target.value prints out the value of the event. I.e prints out everything being typed
   }
 
   onButtonSubmit = () => {
-    this.setState({imageUrl: this.state.input}); //update img url with input
+    this.setState({ imageUrl: this.state.input }); //update img url with input
 
-    app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input).then(
-      function (response) {
-        console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
-        // do something with response
-      },
-      function (err) {
-        // there was an error
-      }
-    );
+    // refactored to arrow functions half way through video.
+    app.models
+    .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
+    .then( response => this.displayFaceBox(this.calculateFaceLocation(response)))
+    .catch(err => console.log(err))
   }
 
   render() {
@@ -66,7 +85,7 @@ class App extends Component {
         <Logo />
         <Rank />
         <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-        <FaceRecognition imageUrl={this.state.imageUrl}/>
+        <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
       </div>
     );
   }
