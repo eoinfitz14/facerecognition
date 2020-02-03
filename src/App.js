@@ -42,7 +42,8 @@ class App extends Component {
       input: '',
       imageUrl: '',
       box: {},
-      route: 'signIn' // letting it equal signIn initially so that we have to navigate to the sign in page before anything else
+      route: 'signIn', // letting it equal signIn initially so that we have to navigate to the sign in page before anything else
+      isSignedIn: false //same story as above
     }
   }
 
@@ -92,6 +93,12 @@ class App extends Component {
   }
 
   onRouteChange = (route) => {
+    if(route === 'home'){
+      this.setState({isSignedIn: true})
+    }
+    else {
+      this.setState({isSignedIn: false})
+    }
     this.setState({route: route});
   }
 
@@ -103,11 +110,11 @@ class App extends Component {
         <Particles className='particles'
           params={particlesOptions}
         />
+        <Navigation onRouteChange={this.onRouteChange} isSignedIn={this.state.isSignedIn} />
         {
           // first conditional statement... if state is on home screen great, otherwise...
           this.state.route === 'home'
           ? <div>
-              <Navigation onRouteChange={this.onRouteChange} />
               <Logo />
               <Rank />
               <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
@@ -116,8 +123,12 @@ class App extends Component {
           : ( 
             //second conditional statement... if state is on sign in screen great, otherwise register screen
             this.state.route === 'signIn'
-              ? <SignIn onRouteChange={this.onRouteChange}/>
-              : <Register onRouteChange={this.onRouteChange}/>
+              ? <div>
+                  <SignIn onRouteChange={this.onRouteChange}/>
+              </div>
+              : <div>
+                  <Register onRouteChange={this.onRouteChange}/>
+              </div>
           )
         }
       </div>

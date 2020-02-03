@@ -3,7 +3,6 @@ import React from 'react';
 // import './SignIn.css';
 // simple component with no state so we don't need to make it a class
 const SignIn = ({onRouteChange}) => {
-
     return (
         <article className="br3 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
             <main className="pa4 black-80">
@@ -27,7 +26,7 @@ const SignIn = ({onRouteChange}) => {
                             value="Sign in" />
                     </div>
                     <div className="lh-copy mt3">
-                        <p onClick={ () => onRouteChange('register')} className="f6 link dim black db">Register</p>
+                        <p onClick={ () => onRouteChange('register')} className="f6 link dim black db pointer">Register</p>
                     </div>
                 </form>
             </main>
