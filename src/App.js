@@ -104,28 +104,33 @@ class App extends Component {
 
   // usual react rendering function
   render() {
+
+    // write variables with this.state first to remind yourself but after implementation use this method of destructuring
+    //NB ----- Destructuring!! i.e stopping repetition of this.state 
+    const {isSignedIn, imageUrl, route, box} = this.state;
+
     return (
       <div className="App">
 
         <Particles className='particles'
           params={particlesOptions}
         />
-        <Navigation onRouteChange={this.onRouteChange} isSignedIn={this.state.isSignedIn} />
+        <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
         {
           // first conditional statement... if state is on home screen great, otherwise...
-          this.state.route === 'home'
+          route === 'home'
           ? <div>
               <Logo />
               <Rank />
               <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-              <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
+              <FaceRecognition box={box} imageUrl={imageUrl} />
             </div>
           : ( 
             //second conditional statement... if state is on sign in screen great, otherwise register screen
-            this.state.route === 'signIn'
+            route === 'signIn'
               ? <div>
                   <SignIn onRouteChange={this.onRouteChange}/>
-              </div>
+              </div> 
               : <div>
                   <Register onRouteChange={this.onRouteChange}/>
               </div>

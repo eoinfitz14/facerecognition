@@ -3,7 +3,6 @@ import React from 'react';
 // simple component with no state so we don't need to make it a class
 const Navigation = ({ onRouteChange, isSignedIn }) => {
 
-    console.log(isSignedIn);
     if (isSignedIn) {
         return (
             <nav style={{ display: 'flex', justifyContent: 'flex-end' }}>
