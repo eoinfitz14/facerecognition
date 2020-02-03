@@ -2,6 +2,7 @@ import React from 'react';
 import Tilt from 'react-tilt';
 import './Logo.css';
 import brain from './brain.png';
+
 // simple component with no state so we don't need to make it a class
 const Logo = () => {
 

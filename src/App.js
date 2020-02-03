@@ -4,6 +4,7 @@ import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
+import SignIn from './components/SignIn/SignIn';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
@@ -39,7 +40,8 @@ class App extends Component {
     this.state = {
       input: '',
       imageUrl: '',
-      box: {}
+      box: {},
+      route: 'signIn' // letting it equal signIn initially so that we have to navigate to the sign in page before anything else
     }
   }
 
@@ -55,18 +57,18 @@ class App extends Component {
       // width = total with of img
       // if we multiply this we get the point where the left col should be 
       leftCol: clarifaiFace.left_col * width,
-  
+
       //repeat for others
       topRow: clarifaiFace.top_row * height,
       rightCol: width - (clarifaiFace.right_col * width),
       bottomRow: height - (clarifaiFace.bottom_row * height)
     }
   }
-  
+
   // need to change name of this function when finished the course as it's misleading
   // this sets the state of the box, it doesn't display anything
   displayFaceBox = (box) => {
-    this.setState({box: box});
+    this.setState({ box: box });
   }
 
   // event listener to set the state of the input
@@ -83,9 +85,13 @@ class App extends Component {
 
     // refactored to arrow functions half way through video.
     app.models
-    .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-    .then( response => this.displayFaceBox(this.calculateFaceLocation(response)))
-    .catch(err => console.log(err))
+      .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
+      .then(response => this.displayFaceBox(this.calculateFaceLocation(response)))
+      .catch(err => console.log(err))
+  }
+
+  onRouteChange = (route) => {
+    this.setState({route: route});
   }
 
   // usual react rendering function
@@ -96,11 +102,17 @@ class App extends Component {
         <Particles className='particles'
           params={particlesOptions}
         />
-        <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-        <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
+        {
+          this.state.route === 'signIn'
+          ? <SignIn onRouteChange={this.onRouteChange}/>
+          : <div>
+              <Navigation onRouteChange={this.onRouteChange} />
+              <Logo />
+              <Rank />
+              <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
+              <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
+            </div>
+        }
       </div>
     );
   }
