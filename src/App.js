@@ -5,6 +5,7 @@ import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
@@ -103,15 +104,21 @@ class App extends Component {
           params={particlesOptions}
         />
         {
-          this.state.route === 'signIn'
-          ? <SignIn onRouteChange={this.onRouteChange}/>
-          : <div>
+          // first conditional statement... if state is on home screen great, otherwise...
+          this.state.route === 'home'
+          ? <div>
               <Navigation onRouteChange={this.onRouteChange} />
               <Logo />
               <Rank />
               <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
               <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
             </div>
+          : ( 
+            //second conditional statement... if state is on sign in screen great, otherwise register screen
+            this.state.route === 'signIn'
+              ? <SignIn onRouteChange={this.onRouteChange}/>
+              : <Register onRouteChange={this.onRouteChange}/>
+          )
         }
       </div>
     );
