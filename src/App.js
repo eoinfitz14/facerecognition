@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
+// SYNTAX NOTE NB:
+// import (whatever is at bottom of file in line e.g 'export default Navigation') from (file)
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
