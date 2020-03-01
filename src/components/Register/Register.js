@@ -1,40 +1,103 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 
 // import './Register.css';
 // simple component with no state so we don't need to make it a class
-const Register = ({onRouteChange}) => {
+class Register extends React.Component {
 
-  //Form taken from tachyons
-    return (
-        <article className="br3 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
-            <main className="pa4 black-80">
-                <div className="measure">
-                    <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-                        <legend className="f1 fw6 ph0 mh0">Register</legend>
-                        <div className="mt3">
-                            <label className="db fw6 lh-copy f6" htmlFor="email-address">Name</label>
-                            <input className="pa2 input-reset ba bg-transparent hover-white w-100" type="text" name="name" id="name" />
+    constructor(props){
+        super(props);
+        this.state = {
+            email: '',
+            password: '',
+            name: ''
+        }
+    }
+
+    onNameChange = (event) => {
+        this.setState({name: event.target.value});
+    }
+
+    onEmailChange = (event) => {
+        this.setState({email: event.target.value});
+    }
+
+    onPasswordChange = (event) => {
+        this.setState({password: event.target.value});
+    }
+
+    onSubmitSignIn = () => {
+        // fetch does get request by default so add second param for post request
+        fetch('http://localhost:3000/register', {
+            method: 'post',
+            headers : {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: this.state.email,
+                password: this.state.password,
+                name: this.state.name
+            })
+        })
+            .then(response => response.json()) // usual way to get the response
+            .then(user => { // data refers to the http message (can be found in the Network tab of console under the request)
+                if(user){ // if we get a user back
+                    this.props.loadUser(user); // entire app can use this so defining it in App.js hence, this.props before
+                    this.props.onRouteChange('home');
+                }
+            })
+        this.props.onRouteChange('home')
+    }
+
+    render() {
+        //Form taken from tachyons
+        return (
+            <article className="br3 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
+                <main className="pa4 black-80">
+                    <div className="measure">
+                        <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
+                            <legend className="f1 fw6 ph0 mh0">Register</legend>
+                            <div className="mt3">
+                                <label className="db fw6 lh-copy f6" htmlFor="name">Name</label>
+                                <input 
+                                    onChange={this.onNameChange}
+                                    className="pa2 input-reset ba bg-transparent hover-white w-100" 
+                                    type="text" 
+                                    name="name" 
+                                    id="name"
+                                />
+                            </div>
+                            <div className="mt3">
+                                <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
+                                <input 
+                                    onChange={this.onEmailChange}
+                                    className="pa2 input-reset ba bg-transparent hover-white w-100" 
+                                    type="email" 
+                                    name="email-address" 
+                                    id="email-address" 
+                                />
+                            </div>
+                            <div className="mv3">
+                                <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
+                                <input 
+                                    onChange={this.onPasswordChange}
+                                    className="b pa2 input-reset ba bg-transparent hover-white w-100" 
+                                    type="password" 
+                                    name="password" 
+                                    id="password" 
+                                />
+                            </div>
+                        </fieldset>
+                        <div className="">
+                            <input 
+                                onClick={this.onSubmitSignIn}
+                                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
+                                type="submit" 
+                                value="Register" />
                         </div>
-                        <div className="mt3">
-                            <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
-                            <input className="pa2 input-reset ba bg-transparent hover-white w-100" type="email" name="email-address" id="email-address" />
-                        </div>
-                        <div className="mv3">
-                            <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
-                            <input className="b pa2 input-reset ba bg-transparent hover-white w-100" type="password" name="password" id="password" />
-                        </div>
-                    </fieldset>
-                    <div className="">
-                        <input 
-                            onClick={ () => onRouteChange('home')}
-                            className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
-                            type="submit" 
-                            value="Register" />
                     </div>
-                </div>
-            </main>
-        </article>
-    );
+                </main>
+            </article>
+        );
+    }
+  
 }
 
 export default Register; 

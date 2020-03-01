@@ -45,9 +45,34 @@ class App extends Component {
       imageUrl: '',
       box: {},
       route: 'signIn', // letting it equal signIn initially so that we have to navigate to the sign in page before anything else
-      isSignedIn: false //same story as above
+      isSignedIn: false, //same story as above
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
     }
   }
+
+  loadUser = (data) => {
+    this.setState({user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined
+    }})
+  }
+
+  //KEEP HERE FOR NOTES
+  //life cycle hook that comes with react. Look into it. Just for checking that the api is working so don't need it anymore
+  // componentDidMount() {
+  //   fetch('http://localhost:3000')
+  //     .then(response => response.json())
+  //     .then(console.log)
+  // }
 
   // takes in response data and calculated the points at which the corners of the face recognition box is
   calculateFaceLocation = (data) => {
@@ -134,7 +159,7 @@ class App extends Component {
                   <SignIn onRouteChange={this.onRouteChange}/>
               </div> 
               : <div>
-                  <Register onRouteChange={this.onRouteChange}/>
+                  <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
               </div>
           )
         }
