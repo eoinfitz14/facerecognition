@@ -108,14 +108,32 @@ class App extends Component {
 
   // sets the state of the image URL 
   // sends a request to the API using .predict() 
-  // extracts the response and passes it to calculation functions
+  // extracts the response and passes locations to calculation functions
+  // also gets no. of entries for a user
+  // a better name might be onPhotoSubmit 
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input }); //update img url with input
-
-    // refactored to arrow functions half way through video.
     app.models
-      .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-      .then(response => this.displayFaceBox(this.calculateFaceLocation(response)))
+      .predict(
+        Clarifai.FACE_DETECT_MODEL,
+        this.state.input)
+      .then(response => {
+        if (response) {
+          fetch('http://localhost:3000/image', {
+            method: 'put',
+            headers : {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id: this.state.user.id
+            })
+          })
+          .then(response => response.json())
+          .then(count => {
+            // Object.assign() is used so that other user attributes aren't overwritten
+            this.setState(Object.assign(this.state.user, {entries: count}))
+          })
+        }
+        this.displayFaceBox(this.calculateFaceLocation(response))
+      })
       .catch(err => console.log(err))
   }
 
@@ -148,7 +166,9 @@ class App extends Component {
           route === 'home'
           ? <div>
               <Logo />
-              <Rank />
+              <Rank name={this.state.user.name}
+                    entries={this.state.user.entries}
+              />
               <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
               <FaceRecognition box={box} imageUrl={imageUrl} />
             </div>
@@ -156,7 +176,7 @@ class App extends Component {
             //second conditional statement... if state is on sign in screen great, otherwise register screen
             route === 'signIn'
               ? <div>
-                  <SignIn onRouteChange={this.onRouteChange}/>
+                  <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
               </div> 
               : <div>
                   <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>

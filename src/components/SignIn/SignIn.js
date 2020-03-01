@@ -31,12 +31,13 @@ class SignIn extends React.Component {
             })
         })
             .then(response => response.json()) // usual way to get the response
-            .then(data => { // data refers to the http message (can be found in the Network tab of console under the request)
-                if(data === 'success'){
+            .then(user => { // data refers to the http message (can be found in the Network tab of console under the request)
+                if(user){ // if we get a user back
+                    this.props.loadUser(user); // entire app can use this so defining it in App.js hence, this.props before
                     this.props.onRouteChange('home');
                 }
             })
-        this.props.onRouteChange('home')
+        this.props.onRouteChange('home');
     }
 
     render(){
