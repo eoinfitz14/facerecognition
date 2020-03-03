@@ -34,26 +34,28 @@ const app = new Clarifai.App({
   apiKey: API_KEY
 });
 
+const initState = {
+  input: '',
+  imageUrl: '',
+  box: {},
+  route: 'signIn', // letting it equal signIn initially so that we have to navigate to the sign in page before anything else
+  isSignedIn: false, //same story as above
+  user: {
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: ''
+  }
+}
+
 class App extends Component {
 
   // constructor needed for classes with state
   constructor() {
     super();
     // components with state are things that need to be recognised as they change on the fly 
-    this.state = {
-      input: '',
-      imageUrl: '',
-      box: {},
-      route: 'signIn', // letting it equal signIn initially so that we have to navigate to the sign in page before anything else
-      isSignedIn: false, //same story as above
-      user: {
-        id: '',
-        name: '',
-        email: '',
-        entries: 0,
-        joined: ''
-      }
-    }
+    this.state = initState;
   }
 
   loadUser = (data) => {
@@ -138,11 +140,11 @@ class App extends Component {
   }
 
   onRouteChange = (route) => {
-    if(route === 'home'){
-      this.setState({isSignedIn: true})
+    if(route === 'signout'){
+      this.setState(initState);
     }
-    else {
-      this.setState({isSignedIn: false})
+    else if(route === 'home'){
+      this.setState({isSignedIn: true});
     }
     this.setState({route: route});
   }
