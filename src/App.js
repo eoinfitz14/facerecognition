@@ -38,7 +38,7 @@ const initState = {
   input: '',
   imageUrl: '',
   box: {},
-  route: 'signIn', // letting it equal signIn initially so that we have to navigate to the sign in page before anything else
+  route: 'signin', // letting it equal signIn initially so that we have to navigate to the sign in page before anything else
   isSignedIn: false, //same story as above
   user: {
     id: '',
@@ -168,15 +168,13 @@ class App extends Component {
           route === 'home'
           ? <div>
               <Logo />
-              <Rank name={this.state.user.name}
-                    entries={this.state.user.entries}
-              />
+              <Rank name={this.state.user.name} entries={this.state.user.entries} />
               <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
               <FaceRecognition box={box} imageUrl={imageUrl} />
             </div>
           : ( 
             //second conditional statement... if state is on sign in screen great, otherwise register screen
-            route === 'signIn'
+            route === 'signin'
               ? <div>
                   <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
               </div> 
