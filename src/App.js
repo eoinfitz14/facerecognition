@@ -10,7 +10,6 @@ import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
 
 //react particles to make the background a little jazzier
 const particlesOptions = {
@@ -24,15 +23,6 @@ const particlesOptions = {
     }
   }
 }
-
-// access the .env file using process.env
-//REACT_APP_ must be the prefix of all variables in the .env file for React to be able to access them 
-const API_KEY = process.env.REACT_APP_API_KEY;
-
-// imported Clarifai from CLarifai.com (machine learning API)
-const app = new Clarifai.App({
-  apiKey: API_KEY
-});
 
 const initState = {
   input: '',
@@ -109,34 +99,38 @@ class App extends Component {
   }
 
   // sets the state of the image URL 
-  // sends a request to the API using .predict() 
   // extracts the response and passes locations to calculation functions
   // also gets no. of entries for a user
   // a better name might be onPhotoSubmit 
   onButtonSubmit = () => {
-    this.setState({ imageUrl: this.state.input }); //update img url with input
-    app.models
-      .predict(
-        Clarifai.FACE_DETECT_MODEL,
-        this.state.input)
+    this.setState({imageUrl: this.state.input});  //update img url with input
+      fetch('http://localhost:3000/imageurl', {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          input: this.state.input
+        })
+      })
+      .then(response => response.json())
       .then(response => {
         if (response) {
           fetch('http://localhost:3000/image', {
             method: 'put',
-            headers : {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                id: this.state.user.id
+              id: this.state.user.id
             })
           })
-          .then(response => response.json())
-          .then(count => {
-            // Object.assign() is used so that other user attributes aren't overwritten
-            this.setState(Object.assign(this.state.user, {entries: count}))
-          })
+            .then(response => response.json())
+            .then(count => {
+              this.setState(Object.assign(this.state.user, { entries: count}))
+            })
+            .catch(console.log)
+
         }
         this.displayFaceBox(this.calculateFaceLocation(response))
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
   }
 
   onRouteChange = (route) => {
