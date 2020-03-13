@@ -27,7 +27,7 @@ class Register extends React.Component {
 
     onSubmitSignIn = () => {
         // fetch does get request by default so add second param for post request
-        fetch('http://localhost:3000/register', {
+        fetch('https://stark-thicket-50588.herokuapp.com/register', {
             method: 'post',
             headers : {'Content-Type': 'application/json'},
             body: JSON.stringify({

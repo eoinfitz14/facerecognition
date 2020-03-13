@@ -22,7 +22,7 @@ class SignIn extends React.Component {
 
     onSubmitSignIn = () => {
         // fetch does get request by default so add second param for post request
-        fetch('http://localhost:3000/signin', {
+        fetch('https://stark-thicket-50588.herokuapp.com/signin', {
             method: 'post',
             headers : {'Content-Type': 'application/json'},
             body: JSON.stringify({
