@@ -1,8 +1,8 @@
-import React, { useReducer } from 'react';
+import React, { Component } from 'react';
 
 // import './Register.css';
 // simple component with no state so we don't need to make it a class
-class Register extends React.Component {
+class Register extends Component {
 
     constructor(props){
         super(props);
