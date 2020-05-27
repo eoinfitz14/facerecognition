@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-// SYNTAX NOTE NB:
-// import (whatever is at bottom of file in line e.g 'export default Navigation') from (file)
+
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
@@ -28,8 +27,8 @@ const initState = {
   input: '',
   imageUrl: '',
   box: {},
-  route: 'signin', // letting it equal signIn initially so that we have to navigate to the sign in page before anything else
-  isSignedIn: false, //same story as above
+  route: 'signin', //  'signin' initially so that we have to navigate to the sign in page before anything else
+  isSignedIn: false, // same story as above
   user: {
     id: '',
     name: '',
@@ -58,14 +57,6 @@ class App extends Component {
     }})
   }
 
-  //KEEP HERE FOR NOTES
-  //life cycle hook that comes with react. Look into it. Just for checking that the api is working so don't need it anymore
-  // componentDidMount() {
-  //   fetch('http://localhost:3000')
-  //     .then(response => response.json())
-  //     .then(console.log)
-  // }
-
   // takes in response data and calculated the points at which the corners of the face recognition box is
   calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -77,9 +68,8 @@ class App extends Component {
       // left_col = the % of the width
       // width = total with of img
       // if we multiply this we get the point where the left col should be 
-      leftCol: clarifaiFace.left_col * width,
-
       //repeat for others
+      leftCol: clarifaiFace.left_col * width,
       topRow: clarifaiFace.top_row * height,
       rightCol: width - (clarifaiFace.right_col * width),
       bottomRow: height - (clarifaiFace.bottom_row * height)
@@ -88,7 +78,7 @@ class App extends Component {
 
   // need to change name of this function when finished the course as it's misleading
   // this sets the state of the box, it doesn't display anything
-  displayFaceBox = (box) => {
+  faceBox = (box) => {
     this.setState({ box: box });
   }
 
@@ -128,7 +118,7 @@ class App extends Component {
             .catch(console.log)
 
         }
-        this.displayFaceBox(this.calculateFaceLocation(response))
+        this.faceBox(this.calculateFaceLocation(response))
       })
       .catch(err => console.log(err));
   }
@@ -146,7 +136,6 @@ class App extends Component {
   // usual react rendering function
   render() {
 
-    // write variables with this.state first to remind yourself but after implementation use this method of destructuring
     //NB ----- Destructuring!! i.e stopping repetition of this.state 
     const {isSignedIn, imageUrl, route, box} = this.state;
 
@@ -167,7 +156,7 @@ class App extends Component {
               <FaceRecognition box={box} imageUrl={imageUrl} />
             </div>
           : ( 
-            //second conditional statement... if state is on sign in screen great, otherwise register screen
+            //second conditional statement... if state is on sign-in screen great, otherwise register screen
             route === 'signin'
               ? <div>
                   <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
