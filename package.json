@@ -12,7 +12,7 @@
     "react-particles-js": "^2.7.0",
     "react-scripts": "3.2.0",
     "react-tilt": "^0.1.4",
-    "react-dev-utils":"10.0.0",
+    "react-dev-utils":"11.0.4",
     "tachyons": "^4.9.0"
   },
   "scripts": {
